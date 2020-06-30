@@ -1,0 +1,30 @@
+Changelog of Qt5Gtk2
+
+----------
+Version 0.1
+* inital release
+
+Version 0.2
+* removed gconf dependency
+* removed warning about missing GtkRange::activate-slider property
+* updated copyright and documentation
+
+Version 0.3
+* using gtk2 library directly
+* removed unused code
+
+Version 0.4
+* added Qt 5.8 support
+
+Version 0.5
+* fixed documentation
+* fixed 'distclean' target
+* fixed gcc warnings
+* fixed QDockWidget icons (Qt 5.10+)
+
+Version 0.6
+* show shortcuts in context menu (see QTBUG-69452)
+* replaced deprecated functions
+
+Version 0.7
+* fixed Qt 5.15 support
