@@ -20,8 +20,6 @@
 
 #include "qgtkstyle_p.h"
 
-#if !defined(QT_NO_STYLE_GTK)
-
 #include <private/qapplication_p.h>
 #include <QSettings>
 #include <QDialogButtonBox>
@@ -55,10 +53,6 @@
 #include "qgtkpainter_p.h"
 #include "qstylehelper_p.h"
 #include "qgtkstyle_p_p.h"
-
-#ifndef Q_FALLTHROUGH
-#define Q_FALLTHROUGH() (void)0
-#endif
 
 
 QT_BEGIN_NAMESPACE
@@ -4236,5 +4230,3 @@ void QGtkStyle::drawItemText(QPainter *painter, const QRect &rect, int alignment
 }
 
 QT_END_NAMESPACE
-
-#endif //!defined(QT_NO_STYLE_QGTK)
