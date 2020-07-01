@@ -26,6 +26,8 @@ the following line:
 
 export QT_QPA_PLATFORMTHEME=qt6gtk2
 
+(or qt5gtk2 for compatibility)
+
 Now restart X11 server to take the changes effect.
 
 Files and directories:
