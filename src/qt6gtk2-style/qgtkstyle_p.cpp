@@ -539,7 +539,7 @@ QFont QGtkStylePrivate::getThemeFont()
             font.setFamily(family);
 
         const int weight = pango_font_description_get_weight(gtk_font);
-        font.setWeight(QPlatformFontDatabase::weightFromInteger(weight));
+        font.setWeight(QFont::Weight(weight));
 
         PangoStyle fontstyle = pango_font_description_get_style(gtk_font);
         if (fontstyle == PANGO_STYLE_ITALIC)

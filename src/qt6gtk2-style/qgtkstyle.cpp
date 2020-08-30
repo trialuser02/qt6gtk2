@@ -945,7 +945,7 @@ void QGtkStyle::drawPrimitive(PrimitiveElement element,
 
     case PE_PanelStatusBar: {
         if (widget && widget->testAttribute(Qt::WA_SetPalette) &&
-            option->palette.resolve() & (1 << QPalette::Window)) {
+            option->palette.resolveMask() & (1 << QPalette::Window)) {
             // Respect custom palette
             painter->fillRect(option->rect, option->palette.window());
             break;
@@ -1030,7 +1030,7 @@ void QGtkStyle::drawPrimitive(PrimitiveElement element,
 
     case PE_PanelItemViewItem:
         if (const QStyleOptionViewItem *vopt = qstyleoption_cast<const QStyleOptionViewItem *>(option)) {
-            uint resolve_mask = vopt->palette.resolve();
+            quint64 resolve_mask = vopt->palette.resolveMask();
             if (vopt->backgroundBrush.style() != Qt::NoBrush
                     || (resolve_mask & (1 << QPalette::Base)))
             {
@@ -1207,7 +1207,7 @@ void QGtkStyle::drawPrimitive(PrimitiveElement element,
             GtkWidget *gtkEntry = d->gtkWidget("GtkEntry");
             if (panel->lineWidth > 0)
                 proxy()->drawPrimitive(PE_FrameLineEdit, option, painter, widget);
-            uint resolve_mask = option->palette.resolve();
+            quint64 resolve_mask = option->palette.resolveMask();
             GtkStyle *gtkEntryStyle = gtk_widget_get_style(gtkEntry);
             QRect textRect = option->rect.adjusted(gtkEntryStyle->xthickness, gtkEntryStyle->ythickness,
                                                    -gtkEntryStyle->xthickness, -gtkEntryStyle->ythickness);
@@ -1858,7 +1858,7 @@ void QGtkStyle::drawComplexControl(ComplexControl control, const QStyleOptionCom
 
                     // Fill the line edit background
                     // We could have used flat_box with "entry_bg" but that is probably not worth the overhead
-                    uint resolve_mask = option->palette.resolve();
+                    quint64 resolve_mask = option->palette.resolveMask();
                     GtkStyle *gtkEntryStyle = gtk_widget_get_style(gtkEntry);
                     QRect contentRect = frameRect.adjusted(gtkEntryStyle->xthickness, gtkEntryStyle->ythickness,
                                                            -gtkEntryStyle->xthickness, -gtkEntryStyle->ythickness);
@@ -2325,7 +2325,7 @@ void QGtkStyle::drawComplexControl(ComplexControl control, const QStyleOptionCom
                     QGtkStylePrivate::gtkWidgetSetFocus(gtkSpinButton, true);
                 }
 
-                uint resolve_mask = option->palette.resolve();
+                quint64 resolve_mask = option->palette.resolveMask();
 
                 if (resolve_mask & (1 << QPalette::Base)) // Palette overridden by user
                     painter->fillRect(editRect, option->palette.base().color());
@@ -2650,7 +2650,7 @@ void QGtkStyle::drawControl(ControlElement element,
             painter->save();
             bool vertical = false, inverted = false;
             if (const QStyleOptionProgressBar *bar2 = qstyleoption_cast<const QStyleOptionProgressBar *>(option)) {
-                vertical = (bar2->orientation == Qt::Vertical);
+                vertical = !(bar2->state & QStyle::State_Horizontal);
                 inverted = bar2->invertedAppearance;
             }
             if (vertical)
@@ -3222,7 +3222,7 @@ void QGtkStyle::drawControl(ControlElement element,
             GdkColor gdkText = style->fg[GTK_STATE_NORMAL];
             GdkColor gdkDText = style->fg[GTK_STATE_INSENSITIVE];
             GdkColor gdkHText = style->fg[GTK_STATE_PRELIGHT];
-            uint resolve_mask = option->palette.resolve();
+            quint64 resolve_mask = option->palette.resolveMask();
             QColor textColor = QColor(gdkText.red>>8, gdkText.green>>8, gdkText.blue>>8);
             QColor disabledTextColor = QColor(gdkDText.red>>8, gdkDText.green>>8, gdkDText.blue>>8);
             if (resolve_mask & (1 << QPalette::ButtonText)) {
@@ -3242,7 +3242,7 @@ void QGtkStyle::drawControl(ControlElement element,
 
             int x, y, w, h;
             menuitem->rect.getRect(&x, &y, &w, &h);
-            int tab = menuitem->tabWidth;
+            int tab = menuitem->reservedShortcutWidth;
             int xm = QGtkStylePrivate::menuItemFrame + checkcol + windowsItemHMargin;
             int xpos = menuitem->rect.x() + xm + 1;
             QRect textRect(xpos, y + windowsItemVMargin, w - xm - QGtkStylePrivate::menuRightBorder - tab + 1, h - 2 * windowsItemVMargin);
@@ -3434,7 +3434,7 @@ void QGtkStyle::drawControl(ControlElement element,
             // Get extra style options if version 2
 
             if (const QStyleOptionProgressBar *bar2 = qstyleoption_cast<const QStyleOptionProgressBar *>(option)) {
-                vertical = (bar2->orientation == Qt::Vertical);
+                vertical = !(bar2->state & QStyle::State_Horizontal);
                 inverted = bar2->invertedAppearance;
             }
 
