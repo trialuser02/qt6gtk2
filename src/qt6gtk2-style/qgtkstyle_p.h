@@ -70,8 +70,8 @@ public:
     void drawItemText(QPainter *painter, const QRect &rect, int alignment, const QPalette &pal,
                       bool enabled, const QString& text, QPalette::ColorRole textRole) const override;
 
-    int pixelMetric(PixelMetric metric, const QStyleOption *option = 0,
-                    const QWidget *widget = 0) const override;
+    int pixelMetric(PixelMetric metric, const QStyleOption *option = nullptr,
+                    const QWidget *widget = nullptr) const override;
     int styleHint(StyleHint hint, const QStyleOption *option,
                   const QWidget *widget, QStyleHintReturn *returnData) const override;
 
@@ -86,8 +86,8 @@ public:
 
     QSize sizeFromContents(ContentsType type, const QStyleOption *option,
                            const QSize &size, const QWidget *widget) const override;
-    QIcon standardIcon(StandardPixmap standardIcon, const QStyleOption *option = 0,
-                       const QWidget *widget = 0) const override;
+    QIcon standardIcon(StandardPixmap standardIcon, const QStyleOption *option = nullptr,
+                       const QWidget *widget = nullptr) const override;
     QPixmap standardPixmap(StandardPixmap sp, const QStyleOption *option,
                            const QWidget *widget) const override;
     QPixmap generatedIconPixmap(QIcon::Mode iconMode, const QPixmap &pixmap,

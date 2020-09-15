@@ -38,7 +38,7 @@ QPlatformTheme *Qt6Gtk2ThemePlugin::create(const QString &key, const QStringList
     if (key.toLower() == QStringLiteral("qt6gtk2") || key.toLower() == QStringLiteral("qt5gtk2"))
         return new Qt6Gtk2Theme;
 
-    return 0;
+    return nullptr;
 }
 
 QT_END_NAMESPACE

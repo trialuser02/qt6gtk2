@@ -68,7 +68,7 @@ private:
 QGtk2Dialog::QGtk2Dialog(GtkWidget *gtkWidget) : gtkWidget(gtkWidget)
 {
     g_signal_connect_swapped(G_OBJECT(gtkWidget), "response", G_CALLBACK(onResponse), this);
-    g_signal_connect(G_OBJECT(gtkWidget), "delete-event", G_CALLBACK(gtk_widget_hide_on_delete), NULL);
+    g_signal_connect(G_OBJECT(gtkWidget), "delete-event", G_CALLBACK(gtk_widget_hide_on_delete), nullptr);
 }
 
 QGtk2Dialog::~QGtk2Dialog()
@@ -139,7 +139,7 @@ void QGtk2Dialog::onResponse(QGtk2Dialog *dialog, int response)
 void QGtk2Dialog::onParentWindowDestroyed()
 {
     // The QGtk2*DialogHelper classes own this object. Make sure the parent doesn't delete it.
-    setParent(0);
+    setParent(nullptr);
 }
 
 Qt6Gtk2ColorDialogHelper::Qt6Gtk2ColorDialogHelper()
@@ -211,29 +211,29 @@ void Qt6Gtk2ColorDialogHelper::onColorChanged(Qt6Gtk2ColorDialogHelper *dialog)
 void Qt6Gtk2ColorDialogHelper::applyOptions()
 {
     GtkDialog *gtkDialog = d->gtkDialog();
-    gtk_window_set_title(GTK_WINDOW(gtkDialog), options()->windowTitle().toUtf8());
+    gtk_window_set_title(GTK_WINDOW(gtkDialog), options()->windowTitle().toUtf8().constData());
 
     GtkWidget *gtkColorSelection = gtk_color_selection_dialog_get_color_selection(GTK_COLOR_SELECTION_DIALOG(gtkDialog));
     gtk_color_selection_set_has_opacity_control(GTK_COLOR_SELECTION(gtkColorSelection), options()->testOption(QColorDialogOptions::ShowAlphaChannel));
 
-    GtkWidget *okButton = 0;
-    GtkWidget *cancelButton = 0;
-    GtkWidget *helpButton = 0;
-    g_object_get(G_OBJECT(gtkDialog), "ok-button", &okButton, "cancel-button", &cancelButton, "help-button", &helpButton, NULL);
+    GtkWidget *okButton = nullptr;
+    GtkWidget *cancelButton = nullptr;
+    GtkWidget *helpButton = nullptr;
+    g_object_get(G_OBJECT(gtkDialog), "ok-button", &okButton, "cancel-button", &cancelButton, "help-button", &helpButton, nullptr);
     if (okButton)
-        g_object_set(G_OBJECT(okButton), "visible", !options()->testOption(QColorDialogOptions::NoButtons), NULL);
+        g_object_set(G_OBJECT(okButton), "visible", !options()->testOption(QColorDialogOptions::NoButtons), nullptr);
     if (cancelButton)
-        g_object_set(G_OBJECT(cancelButton), "visible", !options()->testOption(QColorDialogOptions::NoButtons), NULL);
+        g_object_set(G_OBJECT(cancelButton), "visible", !options()->testOption(QColorDialogOptions::NoButtons), nullptr);
     if (helpButton)
         gtk_widget_hide(helpButton);
 }
 
 Qt5Gtk2FileDialogHelper::Qt5Gtk2FileDialogHelper()
 {
-    d.reset(new QGtk2Dialog(gtk_file_chooser_dialog_new("", 0,
+    d.reset(new QGtk2Dialog(gtk_file_chooser_dialog_new("", nullptr,
                                                         GTK_FILE_CHOOSER_ACTION_OPEN,
                                                         GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-                                                        GTK_STOCK_OK, GTK_RESPONSE_OK, NULL)));
+                                                        GTK_STOCK_OK, GTK_RESPONSE_OK, nullptr)));
     connect(d.data(), SIGNAL(accept()), this, SLOT(onAccepted()));
     connect(d.data(), SIGNAL(reject()), this, SIGNAL(reject()));
 
@@ -278,7 +278,7 @@ bool Qt5Gtk2FileDialogHelper::defaultNameFilterDisables() const
 void Qt5Gtk2FileDialogHelper::setDirectory(const QUrl &directory)
 {
     GtkDialog *gtkDialog = d->gtkDialog();
-    gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(gtkDialog), directory.toLocalFile().toUtf8());
+    gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(gtkDialog), directory.toLocalFile().toUtf8().constData());
 }
 
 QUrl Qt5Gtk2FileDialogHelper::directory() const
@@ -303,10 +303,10 @@ void Qt5Gtk2FileDialogHelper::selectFile(const QUrl &filename)
     GtkDialog *gtkDialog = d->gtkDialog();
     if (options()->acceptMode() == QFileDialogOptions::AcceptSave) {
         QFileInfo fi(filename.toLocalFile());
-        gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(gtkDialog), fi.path().toUtf8());
-        gtk_file_chooser_set_current_name(GTK_FILE_CHOOSER(gtkDialog), fi.fileName().toUtf8());
+        gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(gtkDialog), fi.path().toUtf8().constData());
+        gtk_file_chooser_set_current_name(GTK_FILE_CHOOSER(gtkDialog), fi.fileName().toUtf8().constData());
     } else {
-        gtk_file_chooser_select_filename(GTK_FILE_CHOOSER(gtkDialog), filename.toLocalFile().toUtf8());
+        gtk_file_chooser_select_filename(GTK_FILE_CHOOSER(gtkDialog), filename.toLocalFile().toUtf8().constData());
     }
 }
 
@@ -402,7 +402,7 @@ void Qt5Gtk2FileDialogHelper::applyOptions()
     GtkDialog *gtkDialog = d->gtkDialog();
     const QSharedPointer<QFileDialogOptions> &opts = options();
 
-    gtk_window_set_title(GTK_WINDOW(gtkDialog), opts->windowTitle().toUtf8());
+    gtk_window_set_title(GTK_WINDOW(gtkDialog), opts->windowTitle().toUtf8().constData());
     gtk_file_chooser_set_local_only(GTK_FILE_CHOOSER(gtkDialog), true);
 
     const GtkFileChooserAction action = gtkFileChooserAction(opts);
@@ -421,7 +421,7 @@ void Qt5Gtk2FileDialogHelper::applyOptions()
     if (opts->initialDirectory().isLocalFile())
         setDirectory(opts->initialDirectory());
 
-    foreach (const QUrl &filename, opts->initiallySelectedFiles())
+    for (const QUrl &filename : opts->initiallySelectedFiles())
         selectFile(filename);
 
     const QString initialNameFilter = opts->initiallySelectedNameFilter();
@@ -432,7 +432,7 @@ void Qt5Gtk2FileDialogHelper::applyOptions()
     GtkWidget *acceptButton = gtk_dialog_get_widget_for_response(gtkDialog, GTK_RESPONSE_OK);
     if (acceptButton) {
         if (opts->isLabelExplicitlySet(QFileDialogOptions::Accept))
-            gtk_button_set_label(GTK_BUTTON(acceptButton), opts->labelText(QFileDialogOptions::Accept).toUtf8());
+            gtk_button_set_label(GTK_BUTTON(acceptButton), opts->labelText(QFileDialogOptions::Accept).toUtf8().constData());
         else if (opts->acceptMode() == QFileDialogOptions::AcceptOpen)
             gtk_button_set_label(GTK_BUTTON(acceptButton), GTK_STOCK_OPEN);
         else
@@ -442,7 +442,7 @@ void Qt5Gtk2FileDialogHelper::applyOptions()
     GtkWidget *rejectButton = gtk_dialog_get_widget_for_response(gtkDialog, GTK_RESPONSE_CANCEL);
     if (rejectButton) {
         if (opts->isLabelExplicitlySet(QFileDialogOptions::Reject))
-            gtk_button_set_label(GTK_BUTTON(rejectButton), opts->labelText(QFileDialogOptions::Reject).toUtf8());
+            gtk_button_set_label(GTK_BUTTON(rejectButton), opts->labelText(QFileDialogOptions::Reject).toUtf8().constData());
         else
             gtk_button_set_label(GTK_BUTTON(rejectButton), GTK_STOCK_CANCEL);
     }
@@ -452,20 +452,21 @@ void Qt5Gtk2FileDialogHelper::applyOptions()
 void Qt5Gtk2FileDialogHelper::setNameFilters(const QStringList &filters)
 {
     GtkDialog *gtkDialog = d->gtkDialog();
-    foreach (GtkFileFilter *filter, _filters)
+    for (GtkFileFilter *filter : qAsConst(_filters))
         gtk_file_chooser_remove_filter(GTK_FILE_CHOOSER(gtkDialog), filter);
 
     _filters.clear();
     _filterNames.clear();
 
-    foreach (const QString &filter, filters) {
+    for (const QString &filter : qAsConst(filters)) {
         GtkFileFilter *gtkFilter = gtk_file_filter_new();
         const QString name = filter.left(filter.indexOf(QLatin1Char('(')));
         const QStringList extensions = cleanFilterList(filter);
 
-        gtk_file_filter_set_name(gtkFilter, name.isEmpty() ? extensions.join(QStringLiteral(", ")).toUtf8() : name.toUtf8());
-        foreach (const QString &ext, extensions)
-            gtk_file_filter_add_pattern(gtkFilter, ext.toUtf8());
+        gtk_file_filter_set_name(gtkFilter, name.isEmpty() ? extensions.join(QStringLiteral(", ")).toUtf8().constData() :
+                                                             name.toUtf8().constData());
+        for (const QString &ext : qAsConst(extensions))
+            gtk_file_filter_add_pattern(gtkFilter, ext.toUtf8().constData());
 
         gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(gtkDialog), gtkFilter);
 
@@ -505,7 +506,7 @@ static QString qt_fontToString(const QFont &font)
 {
     PangoFontDescription *desc = pango_font_description_new();
     pango_font_description_set_size(desc, (font.pointSizeF() > 0.0 ? font.pointSizeF() : QFontInfo(font).pointSizeF()) * PANGO_SCALE);
-    pango_font_description_set_family(desc, QFontInfo(font).family().toUtf8());
+    pango_font_description_set_family(desc, QFontInfo(font).family().toUtf8().constData());
 
     int weight = font.weight();
     if (weight >= QFont::Black)
@@ -545,7 +546,7 @@ static QString qt_fontToString(const QFont &font)
 static QFont qt_fontFromString(const QString &name)
 {
     QFont font;
-    PangoFontDescription *desc = pango_font_description_from_string(name.toUtf8());
+    PangoFontDescription *desc = pango_font_description_from_string(name.toUtf8().constData());
     font.setPointSizeF(static_cast<float>(pango_font_description_get_size(desc)) / PANGO_SCALE);
 
     QString family = QString::fromUtf8(pango_font_description_get_family(desc));
@@ -570,7 +571,7 @@ static QFont qt_fontFromString(const QString &name)
 void Qt5Gtk2FontDialogHelper::setCurrentFont(const QFont &font)
 {
     GtkFontSelectionDialog *gtkDialog = GTK_FONT_SELECTION_DIALOG(d->gtkDialog());
-    gtk_font_selection_dialog_set_font_name(gtkDialog, qt_fontToString(font).toUtf8());
+    gtk_font_selection_dialog_set_font_name(gtkDialog, qt_fontToString(font).toUtf8().constData());
 }
 
 QFont Qt5Gtk2FontDialogHelper::currentFont() const
@@ -594,7 +595,7 @@ void Qt5Gtk2FontDialogHelper::applyOptions()
     GtkDialog *gtkDialog = d->gtkDialog();
     const QSharedPointer<QFontDialogOptions> &opts = options();
 
-    gtk_window_set_title(GTK_WINDOW(gtkDialog), opts->windowTitle().toUtf8());
+    gtk_window_set_title(GTK_WINDOW(gtkDialog), opts->windowTitle().toUtf8().constData());
 
     GtkWidget *okButton = gtk_font_selection_dialog_get_ok_button(GTK_FONT_SELECTION_DIALOG(gtkDialog));
     GtkWidget *cancelButton = gtk_font_selection_dialog_get_cancel_button(GTK_FONT_SELECTION_DIALOG(gtkDialog));

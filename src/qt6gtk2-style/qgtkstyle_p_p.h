@@ -126,7 +126,7 @@ public:
 
     QGtkStyleFilter filter;
 
-    static QGtkPainter* gtkPainter(QPainter *painter = 0);
+    static QGtkPainter* gtkPainter(QPainter *painter = nullptr);
     static GtkWidget* gtkWidget(const QHashableLatin1Literal &path);
     static GtkStyle* gtkStyle(const QHashableLatin1Literal &path = QHashableLatin1Literal("GtkWindow"));
     static void gtkWidgetSetFocus(GtkWidget *widget, bool focus);
@@ -140,7 +140,7 @@ public:
     static bool isKDE4Session();
     void applyCustomPaletteHash();
     static QFont getThemeFont();
-    static bool isThemeAvailable() { return gtkStyle() != 0; }
+    static bool isThemeAvailable() { return gtkStyle() != nullptr; }
 
     static QString getThemeName();
     virtual int getSpinboxArrowSize() const;
@@ -154,7 +154,7 @@ protected:
     {
         cleanupGtkWidgets();
         delete widgetMap;
-        widgetMap = 0;
+        widgetMap = nullptr;
     }
 
     static inline WidgetMap *gtkWidgetMap()
@@ -171,7 +171,7 @@ protected:
     virtual GtkWidget* getTextColorWidget() const;
     static void setupGtkWidget(GtkWidget* widget);
     static void addWidgetToMap(GtkWidget* widget);
-    static void addAllSubWidgets(GtkWidget *widget, gpointer v = 0);
+    static void addAllSubWidgets(GtkWidget *widget, gpointer v = nullptr);
     static void addWidget(GtkWidget *widget);
     static void removeWidgetFromMap(const QHashableLatin1Literal &path);
 

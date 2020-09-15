@@ -29,7 +29,7 @@ class Qt6Gtk2StylePlugin : public QStylePlugin
     Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QStyleFactoryInterface" FILE "qt6gtk2.json")
 
 public:
-    QStyle *create(const QString &key);
+    QStyle *create(const QString &key) override;
 };
 
 QStyle *Qt6Gtk2StylePlugin::create(const QString &key)

@@ -28,7 +28,7 @@ QT_BEGIN_NAMESPACE
 
 QGtkPainter::QGtkPainter()
 {
-    reset(0);
+    reset(nullptr);
 }
 
 QGtkPainter::~QGtkPainter()

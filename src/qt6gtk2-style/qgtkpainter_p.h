@@ -50,7 +50,7 @@ public:
     QGtkPainter();
     virtual ~QGtkPainter();
 
-    void reset(QPainter *painter = 0);
+    void reset(QPainter *painter = nullptr);
 
     void setAlphaSupport(bool value) { m_alpha = value; }
     void setClipRect(const QRect &rect) { m_cliprect = rect; }
@@ -89,7 +89,7 @@ public:
     virtual void paintCheckbox(GtkWidget *gtkWidget, const QRect &rect, GtkStateType state, GtkShadowType shadow, GtkStyle *style, const QString &detail) = 0;
 
 protected:
-    static QString uniqueName(const QString &key, GtkStateType state, GtkShadowType shadow, const QSize &size, GtkWidget *widget = 0);
+    static QString uniqueName(const QString &key, GtkStateType state, GtkShadowType shadow, const QSize &size, GtkWidget *widget = nullptr);
 
     QPainter *m_painter;
     bool m_alpha;

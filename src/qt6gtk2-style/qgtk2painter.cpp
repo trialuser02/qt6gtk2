@@ -81,7 +81,7 @@ QPixmap QGtk2Painter::renderTheme(uchar *bdata, uchar *wdata, const QRect &rect)
                                                            rect.width(), rect.height());            \
         if (!imgb)                                                                                  \
             return;                                                                                 \
-        imgb = gdk_pixbuf_get_from_drawable(imgb, pixmap, NULL, 0, 0, 0, 0,    \
+        imgb = gdk_pixbuf_get_from_drawable(imgb, pixmap, nullptr, 0, 0, 0, 0,    \
                                                                  rect.width(), rect.height());      \
         uchar* bdata = (uchar*)gdk_pixbuf_get_pixels(imgb);                       \
         if (m_alpha) {                                                                              \
@@ -92,13 +92,13 @@ QPixmap QGtk2Painter::renderTheme(uchar *bdata, uchar *wdata, const QRect &rect)
                                                                rect.width(), rect.height());        \
             if (!imgw)                                                                              \
                 return;                                                                             \
-            imgw = gdk_pixbuf_get_from_drawable(imgw, pixmap, NULL, 0, 0, 0, 0,\
+            imgw = gdk_pixbuf_get_from_drawable(imgw, pixmap, nullptr, 0, 0, 0, 0,\
                                                                      rect.width(), rect.height());  \
             uchar* wdata = (uchar*)gdk_pixbuf_get_pixels(imgw);                   \
             cache = renderTheme(bdata, wdata, rect);                                                \
             g_object_unref(imgw);                                               \
         } else {                                                                                    \
-            cache = renderTheme(bdata, 0, rect);                                                    \
+            cache = renderTheme(bdata, nullptr, rect);                                                    \
         }                                                                                           \
         gdk_drawable_unref(pixmap);                                            \
         g_object_unref(imgb);                                                   \
@@ -138,7 +138,7 @@ void QGtk2Painter::paintBoxGap(GtkWidget *gtkWidget, const gchar* part,
                                            pixmap,
                                            state,
                                            shadow,
-                                           NULL,
+                                           nullptr,
                                            gtkWidget,
                                            (const gchar*)part,
                                            0, 0,
@@ -203,7 +203,7 @@ void QGtk2Painter::paintBox(GtkWidget *gtkWidget, const gchar* part,
                                            pixmap,
                                            state,
                                            shadow,
-                                           NULL,
+                                           nullptr,
                                            gtkWidget,
                                            part,
                                            0, 0,
@@ -255,7 +255,7 @@ void QGtk2Painter::paintHline(GtkWidget *gtkWidget, const gchar* part,
         DRAW_TO_CACHE(gtk_paint_hline (style,
                                          pixmap,
                                          state,
-                                         NULL,
+                                         nullptr,
                                          gtkWidget,
                                          part,
                                          x1, x2, y));
@@ -285,7 +285,7 @@ void QGtk2Painter::paintVline(GtkWidget *gtkWidget, const gchar* part,
         DRAW_TO_CACHE(gtk_paint_vline (style,
                                          pixmap,
                                          state,
-                                         NULL,
+                                         nullptr,
                                          gtkWidget,
                                          part,
                                          y1, y2,
@@ -312,7 +312,7 @@ void QGtk2Painter::paintExpander(GtkWidget *gtkWidget,
 
     if (!m_usePixmapCache || !QPixmapCache::find(pixmapName, &cache)) {
         DRAW_TO_CACHE(gtk_paint_expander (style, pixmap,
-                                            state, NULL,
+                                            state, nullptr,
                                             gtkWidget, part,
                                             rect.width()/2,
                                             rect.height()/2,
@@ -334,7 +334,7 @@ void QGtk2Painter::paintFocus(GtkWidget *gtkWidget, const gchar* part,
     QPixmap cache;
     QString pixmapName = uniqueName(QLS(part), state, GTK_SHADOW_NONE, rect.size(), gtkWidget) % pmKey;
     if (!m_usePixmapCache || !QPixmapCache::find(pixmapName, &cache)) {
-        DRAW_TO_CACHE(gtk_paint_focus (style, pixmap, state, NULL,
+        DRAW_TO_CACHE(gtk_paint_focus (style, pixmap, state, nullptr,
                                          gtkWidget,
                                          part,
                                          0, 0,
@@ -360,7 +360,7 @@ void QGtk2Painter::paintResizeGrip(GtkWidget *gtkWidget, const gchar* part,
     QString pixmapName = uniqueName(QLS(part), state, shadow, rect.size(), gtkWidget) % pmKey;
     if (!m_usePixmapCache || !QPixmapCache::find(pixmapName, &cache)) {
         DRAW_TO_CACHE(gtk_paint_resize_grip (style, pixmap, state,
-                                               NULL, gtkWidget,
+                                               nullptr, gtkWidget,
                                                part, edge, 0, 0,
                                                rect.width(),
                                                rect.height()));
@@ -422,7 +422,7 @@ void QGtk2Painter::paintHandle(GtkWidget *gtkWidget, const gchar* part, const QR
                                           pixmap,
                                           state,
                                           shadow,
-                                          NULL,
+                                          nullptr,
                                           gtkWidget,
                                           part, 0, 0,
                                           rect.width(),
@@ -450,7 +450,7 @@ void QGtk2Painter::paintSlider(GtkWidget *gtkWidget, const gchar* part, const QR
                                           pixmap,
                                           state,
                                           shadow,
-                                          NULL,
+                                          nullptr,
                                           gtkWidget,
                                           part,
                                           0, 0,
@@ -476,7 +476,7 @@ void QGtk2Painter::paintShadow(GtkWidget *gtkWidget, const gchar* part,
     QPixmap cache;
     QString pixmapName = uniqueName(QLS(part), state, shadow, rect.size()) % pmKey;
     if (!m_usePixmapCache || !QPixmapCache::find(pixmapName, &cache)) {
-        DRAW_TO_CACHE(gtk_paint_shadow(style, pixmap, state, shadow, NULL,
+        DRAW_TO_CACHE(gtk_paint_shadow(style, pixmap, state, shadow, nullptr,
                                          gtkWidget, part, 0, 0, rect.width(), rect.height()));
         if (m_usePixmapCache)
             QPixmapCache::insert(pixmapName, cache);
@@ -498,7 +498,7 @@ void QGtk2Painter::paintFlatBox(GtkWidget *gtkWidget, const gchar* part,
                                             pixmap,
                                             state,
                                             shadow,
-                                            NULL,
+                                            nullptr,
                                             gtkWidget,
                                             part, 0, 0,
                                             rect.width(),
@@ -523,7 +523,7 @@ void QGtk2Painter::paintExtention(GtkWidget *gtkWidget,
 
     if (!m_usePixmapCache || !QPixmapCache::find(pixmapName, &cache)) {
         DRAW_TO_CACHE(gtk_paint_extension (style, pixmap, state, shadow,
-                                             NULL, gtkWidget,
+                                             nullptr, gtkWidget,
                                              (const gchar*)part, 0, 0,
                                              rect.width(),
                                              rect.height(),
@@ -554,7 +554,7 @@ void QGtk2Painter::paintOption(GtkWidget *gtkWidget, const QRect &radiorect,
                                          state, shadow,
                                          &gtkCliprect,
                                          gtkWidget,
-                                         detail.toLatin1(),
+                                         detail.toLatin1().constData(),
                                          xOffset, yOffset,
                                          radiorect.width(),
                                          radiorect.height()));
@@ -587,7 +587,7 @@ void QGtk2Painter::paintCheckbox(GtkWidget *gtkWidget, const QRect &checkrect,
                                          shadow,
                                          &gtkCliprect,
                                          gtkWidget,
-                                         detail.toLatin1(),
+                                         detail.toLatin1().constData(),
                                          xOffset, yOffset,
                                          checkrect.width(),
                                          checkrect.height()));

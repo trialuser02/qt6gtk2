@@ -99,7 +99,7 @@ static void gtkStyleSetCallback(GtkWidget*)
 static void update_toolbar_style(GtkWidget *gtkToolBar, GParamSpec *, gpointer)
 {
     GtkToolbarStyle toolbar_style = GTK_TOOLBAR_ICONS;
-    g_object_get(gtkToolBar, "toolbar-style", &toolbar_style, NULL);
+    g_object_get(gtkToolBar, "toolbar-style", &toolbar_style, nullptr);
     QWidgetList widgets = QApplication::allWidgets();
     for (int i = 0; i < widgets.size(); ++i) {
         QWidget *widget = widgets.at(i);
@@ -113,7 +113,7 @@ static void update_toolbar_style(GtkWidget *gtkToolBar, GParamSpec *, gpointer)
 static QHashableLatin1Literal classPath(GtkWidget *widget)
 {
     char *class_path;
-    gtk_widget_path (widget, NULL, &class_path, NULL);
+    gtk_widget_path (widget, nullptr, &class_path, nullptr);
 
     char *copy = class_path;
     if (strncmp(copy, "GtkWindow.", 10) == 0)
@@ -143,7 +143,7 @@ bool QGtkStyleFilter::eventFilter(QObject *obj, QEvent *e)
 }
 
 QList<QGtkStylePrivate *> QGtkStylePrivate::instances;
-QGtkStylePrivate::WidgetMap *QGtkStylePrivate::widgetMap = 0;
+QGtkStylePrivate::WidgetMap *QGtkStylePrivate::widgetMap = nullptr;
 
 QGtkStylePrivate::QGtkStylePrivate()
   : QCommonStylePrivate()
@@ -185,7 +185,7 @@ GtkStyle* QGtkStylePrivate::gtkStyle(const QHashableLatin1Literal &path)
 {
     if (GtkWidget *w = gtkWidgetMap()->value(path))
         return gtk_widget_get_style(w);
-    return 0;
+    return nullptr;
 }
 
 void QGtkStylePrivate::gtkWidgetSetFocus(GtkWidget *widget, bool focus)
@@ -264,9 +264,9 @@ void QGtkStylePrivate::initGtkWidgets() const
 
 #ifndef Q_OS_MAC
     // Gtk will set the Qt error handler so we have to reset it afterwards
-    x11ErrorHandler qt_x_errhandler = XSetErrorHandler(0);
+    x11ErrorHandler qt_x_errhandler = XSetErrorHandler(nullptr);
 #endif
-    gtk_init (NULL, NULL);
+    gtk_init (nullptr, nullptr);
 #ifndef Q_OS_MAC
     XSetErrorHandler(qt_x_errhandler);
 #endif
@@ -287,11 +287,11 @@ void QGtkStylePrivate::initGtkWidgets() const
         GtkWidget *gtkButton = gtk_button_new();
         addWidget(gtkButton);
         g_signal_connect(gtkButton, "style-set", G_CALLBACK(gtkStyleSetCallback), 0);
-        addWidget((GtkWidget*)gtk_tool_button_new(NULL, "Qt"));
+        addWidget((GtkWidget*)gtk_tool_button_new(nullptr, "Qt"));
         addWidget(gtk_arrow_new(GTK_ARROW_DOWN, GTK_SHADOW_NONE));
         addWidget(gtk_hbutton_box_new());
         addWidget(gtk_check_button_new());
-        addWidget(gtk_radio_button_new(NULL));
+        addWidget(gtk_radio_button_new(nullptr));
         addWidget(gtk_combo_box_new());
         addWidget(gtk_combo_box_entry_new());
         GtkWidget *entry = gtk_entry_new();
@@ -303,14 +303,14 @@ void QGtkStylePrivate::initGtkWidgets() const
         // relatively old. and even for older gtk+, it will fallback
         // to gtk-im-context-simple if gtk-im-context-none doesn't
         // exists.
-        g_object_set(entry, "im-module", "gtk-im-context-none", NULL);
+        g_object_set(entry, "im-module", "gtk-im-context-none", nullptr);
         addWidget(entry);
-        addWidget(gtk_frame_new(NULL));
+        addWidget(gtk_frame_new(nullptr));
         addWidget(gtk_expander_new(""));
         addWidget(gtk_statusbar_new());
         addWidget(gtk_hscale_new((GtkAdjustment*)gtk_adjustment_new(1, 0, 1, 0, 0, 0)));
-        addWidget(gtk_hscrollbar_new(NULL));
-        addWidget(gtk_scrolled_window_new(NULL, NULL));
+        addWidget(gtk_hscrollbar_new(nullptr));
+        addWidget(gtk_scrolled_window_new(nullptr, nullptr));
 
         initGtkMenu();
         addWidget(gtk_notebook_new());
@@ -322,7 +322,7 @@ void QGtkStylePrivate::initGtkWidgets() const
         addWidget(toolbar);
         initGtkTreeview();
         addWidget(gtk_vscale_new((GtkAdjustment*)gtk_adjustment_new(1, 0, 1, 0, 0, 0)));
-        addWidget(gtk_vscrollbar_new(NULL));
+        addWidget(gtk_vscrollbar_new(nullptr));
     }
     else // Rebuild map
     {
@@ -362,7 +362,7 @@ QString QGtkStylePrivate::getThemeName()
     // Read the theme name from GtkSettings
     GtkSettings *settings = gtk_settings_get_default();
     gchararray value;
-    g_object_get(settings, "gtk-theme-name", &value, NULL);
+    g_object_get(settings, "gtk-theme-name", &value, nullptr);
     themeName = QString::fromUtf8(value);
     g_free(value);
     return themeName;
@@ -462,7 +462,7 @@ void QGtkStylePrivate::addAllSubWidgets(GtkWidget *widget, gpointer v)
     Q_UNUSED(v);
     addWidgetToMap(widget);
     if (G_TYPE_CHECK_INSTANCE_TYPE ((widget), gtk_container_get_type()))
-        gtk_container_forall((GtkContainer*)widget, addAllSubWidgets, NULL);
+        gtk_container_forall((GtkContainer*)widget, addAllSubWidgets, nullptr);
 }
 
 // Updates window/windowtext palette based on the indicated gtk widget
@@ -506,7 +506,7 @@ void QGtkStyleUpdateScheduler::updateTheme()
           }
           QList<QWidget*> widgets = QApplication::allWidgets();
           // Notify all widgets that size metrics might have changed
-          foreach (QWidget *widget, widgets) {
+          for (QWidget *widget : qAsConst(widgets)) {
               QEvent e(QEvent::StyleChange);
               QApplication::sendEvent(widget, &e);
           }

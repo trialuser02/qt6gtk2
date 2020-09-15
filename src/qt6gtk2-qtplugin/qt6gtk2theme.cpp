@@ -33,7 +33,7 @@ static QString gtkSetting(const gchar *propertyName)
 {
     GtkSettings *settings = gtk_settings_get_default();
     gchararray value;
-    g_object_get(settings, propertyName, &value, NULL);
+    g_object_get(settings, propertyName, &value, nullptr);
     QString str = QString::fromUtf8(value);
     g_free(value);
     return str;
@@ -43,9 +43,9 @@ Qt6Gtk2Theme::Qt6Gtk2Theme()
 {
     // gtk_init will reset the Xlib error handler, and that causes
     // Qt applications to quit on X errors. Therefore, we need to manually restore it.
-    int (*oldErrorHandler)(Display *, XErrorEvent *) = XSetErrorHandler(NULL);
+    int (*oldErrorHandler)(Display *, XErrorEvent *) = XSetErrorHandler(nullptr);
 
-    gtk_init(0, 0);
+    gtk_init(nullptr, nullptr);
 
     XSetErrorHandler(oldErrorHandler);
 }
@@ -103,7 +103,7 @@ QPlatformDialogHelper *Qt6Gtk2Theme::createPlatformDialogHelper(DialogType type)
     case FontDialog:
         return new Qt5Gtk2FontDialogHelper;
     default:
-        return 0;
+        return nullptr;
     }
 }
 
