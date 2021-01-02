@@ -11,9 +11,15 @@ Requirements:
 
 Installation:
 
-qmake
-make
-make install (under root)
+- Arch AUR
+  https://aur.archlinux.org/packages/qt6gtk2/
+
+- Source Code
+```
+  qmake PREFIX=<your installation path>
+  make
+  sudo make install
+```
 
 To change default installation root you should run the following
 command:
