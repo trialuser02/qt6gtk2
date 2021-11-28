@@ -19,6 +19,7 @@
  ***************************************************************************/
 
 #include <QStylePlugin>
+#include <QLibraryInfo>
 #include "qgtkstyle_p.h"
 
 QT_BEGIN_NAMESPACE
@@ -34,6 +35,13 @@ public:
 
 QStyle *Qt6Gtk2StylePlugin::create(const QString &key)
 {
+    QVersionNumber v = QLibraryInfo::version();
+    if(v.majorVersion() != QT_VERSION_MAJOR || v.minorVersion() != QT_VERSION_MINOR)
+    {
+        qCritical("qt6gtk2 is compiled against incompatible Qt version (" QT_VERSION_STR ").");
+        return nullptr;
+    }
+
     if (key == "qt6gtk2" || key == "qt5gtk2")
         return new QGtkStyle;
     return nullptr;
