@@ -25,6 +25,7 @@
 #include <qcolor.h>
 #include <qdebug.h>
 #include <qfont.h>
+#include <qfileinfo.h>
 
 #include <private/qguiapplication_p.h>
 #include <qpa/qplatformfontdatabase.h>
@@ -34,6 +35,14 @@
 #include <gdk/gdk.h>
 #include <gdk/gdkx.h>
 #include <pango/pango.h>
+
+// The size of the preview we display for selected image files. We set height
+// larger than width because generally there is more free space vertically
+// than horiztonally (setting the preview image will alway expand the width of
+// the dialog, but usually not the height). The image's aspect ratio will always
+// be preserved.
+#define PREVIEW_WIDTH 256
+#define PREVIEW_HEIGHT 512
 
 QT_BEGIN_NAMESPACE
 
@@ -239,6 +248,10 @@ Qt5Gtk2FileDialogHelper::Qt5Gtk2FileDialogHelper()
 
     g_signal_connect(GTK_FILE_CHOOSER(d->gtkDialog()), "selection-changed", G_CALLBACK(onSelectionChanged), this);
     g_signal_connect_swapped(GTK_FILE_CHOOSER(d->gtkDialog()), "current-folder-changed", G_CALLBACK(onCurrentFolderChanged), this);
+
+    previewWidget = gtk_image_new();
+    g_signal_connect(G_OBJECT(d->gtkDialog()), "update-preview", G_CALLBACK(onUpdatePreview), this);
+    gtk_file_chooser_set_preview_widget(GTK_FILE_CHOOSER(d->gtkDialog()), previewWidget);
 }
 
 Qt5Gtk2FileDialogHelper::~Qt5Gtk2FileDialogHelper()
@@ -375,6 +388,33 @@ void Qt5Gtk2FileDialogHelper::onSelectionChanged(GtkDialog *gtkDialog, Qt5Gtk2Fi
 void Qt5Gtk2FileDialogHelper::onCurrentFolderChanged(Qt5Gtk2FileDialogHelper *dialog)
 {
     emit dialog->directoryEntered(dialog->directory());
+}
+
+void Qt5Gtk2FileDialogHelper::onUpdatePreview(GtkDialog *gtkDialog, Qt5Gtk2FileDialogHelper *helper)
+{
+    gchar *filename = gtk_file_chooser_get_preview_filename(GTK_FILE_CHOOSER(gtkDialog));
+    if (!filename) {
+        gtk_file_chooser_set_preview_widget_active(GTK_FILE_CHOOSER(gtkDialog), false);
+        return;
+    }
+
+    // Don't attempt to open anything which isn't a regular file. If a named pipe,
+    // this may hang.
+    QFileInfo fileinfo(filename);
+    if (!fileinfo.exists() || !fileinfo.isFile()) {
+        g_free(filename);
+        gtk_file_chooser_set_preview_widget_active(GTK_FILE_CHOOSER(gtkDialog), false);
+        return;
+    }
+
+    // This will preserve the image's aspect ratio.
+    GdkPixbuf *pixbuf = gdk_pixbuf_new_from_file_at_size(filename, PREVIEW_WIDTH, PREVIEW_HEIGHT, 0);
+    g_free(filename);
+    if (pixbuf) {
+        gtk_image_set_from_pixbuf(GTK_IMAGE(helper->previewWidget), pixbuf);
+        g_object_unref(pixbuf);
+    }
+    gtk_file_chooser_set_preview_widget_active(GTK_FILE_CHOOSER(gtkDialog), pixbuf ? true : false);
 }
 
 static GtkFileChooserAction gtkFileChooserAction(const QSharedPointer<QFileDialogOptions> &options)

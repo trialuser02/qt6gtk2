@@ -28,6 +28,7 @@
 #include <QString>
 #include <qpa/qplatformdialoghelper.h>
 
+typedef struct _GtkWidget GtkWidget;
 typedef struct _GtkDialog GtkDialog;
 typedef struct _GtkFileFilter GtkFileFilter;
 
@@ -88,6 +89,7 @@ private Q_SLOTS:
 private:
     static void onSelectionChanged(GtkDialog *dialog, Qt5Gtk2FileDialogHelper *helper);
     static void onCurrentFolderChanged(Qt5Gtk2FileDialogHelper *helper);
+    static void onUpdatePreview(GtkDialog *dialog, Qt5Gtk2FileDialogHelper *helper);
     void applyOptions();
     void setNameFilters(const QStringList &filters);
 
@@ -96,6 +98,7 @@ private:
     QHash<QString, GtkFileFilter*> _filters;
     QHash<GtkFileFilter*, QString> _filterNames;
     QScopedPointer<QGtk2Dialog> d;
+    GtkWidget *previewWidget;
 };
 
 class Qt5Gtk2FontDialogHelper : public QPlatformFontDialogHelper
