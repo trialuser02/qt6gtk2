@@ -24,22 +24,22 @@ Installation:
 To change default installation root you should run the following
 command:
 
-make install INSTALL_ROOT="custom root"
+`make install INSTALL_ROOT="custom root"`
 
-Add line 'export QT_QPA_PLATFORMTHEME=qt6gtk2' to ~/.profile and re-login.
-Alternatively, create the file /etc/X11/Xsession.d/100-qt6gtk2 with
+Add line `export QT_QPA_PLATFORMTHEME=gtk2` to `~/.profile` and re-login.
+Alternatively, create the file `/etc/X11/Xsession.d/100-qt6gtk2` with
 the following line:
 
-export QT_QPA_PLATFORMTHEME=qt6gtk2
+`export QT_QPA_PLATFORMTHEME=gtk2`
 
-(or qt5gtk2 for compatibility with Qt5Gtk2)
+(`qt5gtk2` for compatibility with Qt5Gtk2, `qt6gtk2` is also a valid value)
 
 Now restart X11 server to take the changes effect.
 
 Files and directories:
 
-libqt6gtk2.so - GTK+2.0 platform plugin
-libqt6gtk2-style.so - GTK+2.0 style plugin
+`libqt6gtk2.so` - GTK+2.0 platform plugin
+`libqt6gtk2-style.so` - GTK+2.0 style plugin
 
 Attention!
-Environment variable QT_STYLE_OVERRIDE should be removed before usage.
+Environment variable `QT_STYLE_OVERRIDE` should be removed before usage.

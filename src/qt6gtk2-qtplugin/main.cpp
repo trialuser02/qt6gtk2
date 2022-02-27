@@ -35,7 +35,7 @@ public:
 QPlatformTheme *Qt6Gtk2ThemePlugin::create(const QString &key, const QStringList &params)
 {
     Q_UNUSED(params);
-    if (key.toLower() == QStringLiteral("qt6gtk2") || key.toLower() == QStringLiteral("qt5gtk2"))
+    if (key.toLower() == QStringLiteral("gtk2") || key.toLower() == QStringLiteral("qt6gtk2") || key.toLower() == QStringLiteral("qt5gtk2"))
         return new Qt6Gtk2Theme;
 
     return nullptr;
