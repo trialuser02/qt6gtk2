@@ -42,7 +42,7 @@ QStyle *Qt6Gtk2StylePlugin::create(const QString &key)
         return nullptr;
     }
 
-    if (key == "qt6gtk2" || key == "qt5gtk2")
+    if (key == "gtk2" || key == "qt6gtk2" || key == "qt5gtk2")
         return new QGtkStyle;
     return nullptr;
 }
