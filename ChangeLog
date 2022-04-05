@@ -3,3 +3,8 @@ Changelog of Qt6Gtk2
 ----------
 Version 0.1
 * inital release
+
+Version 0.2
+* Added Qt version checking
+* Added preview support to the file dialog (Ilya Fedin)
+* Added "gtk2" platform theme key (lvlgl)
