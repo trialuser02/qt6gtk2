@@ -99,9 +99,9 @@ QPlatformDialogHelper *Qt6Gtk2Theme::createPlatformDialogHelper(DialogType type)
     case ColorDialog:
         return new Qt6Gtk2ColorDialogHelper;
     case FileDialog:
-        return new Qt5Gtk2FileDialogHelper;
+        return new Qt6Gtk2FileDialogHelper;
     case FontDialog:
-        return new Qt5Gtk2FontDialogHelper;
+        return new Qt6Gtk2FontDialogHelper;
     default:
         return nullptr;
     }

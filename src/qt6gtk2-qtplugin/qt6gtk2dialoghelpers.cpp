@@ -237,7 +237,7 @@ void Qt6Gtk2ColorDialogHelper::applyOptions()
         gtk_widget_hide(helpButton);
 }
 
-Qt5Gtk2FileDialogHelper::Qt5Gtk2FileDialogHelper()
+Qt6Gtk2FileDialogHelper::Qt6Gtk2FileDialogHelper()
 {
     d.reset(new QGtk2Dialog(gtk_file_chooser_dialog_new("", nullptr,
                                                         GTK_FILE_CHOOSER_ACTION_OPEN,
@@ -254,11 +254,11 @@ Qt5Gtk2FileDialogHelper::Qt5Gtk2FileDialogHelper()
     gtk_file_chooser_set_preview_widget(GTK_FILE_CHOOSER(d->gtkDialog()), previewWidget);
 }
 
-Qt5Gtk2FileDialogHelper::~Qt5Gtk2FileDialogHelper()
+Qt6Gtk2FileDialogHelper::~Qt6Gtk2FileDialogHelper()
 {
 }
 
-bool Qt5Gtk2FileDialogHelper::show(Qt::WindowFlags flags, Qt::WindowModality modality, QWindow *parent)
+bool Qt6Gtk2FileDialogHelper::show(Qt::WindowFlags flags, Qt::WindowModality modality, QWindow *parent)
 {
     _dir.clear();
     _selection.clear();
@@ -267,12 +267,12 @@ bool Qt5Gtk2FileDialogHelper::show(Qt::WindowFlags flags, Qt::WindowModality mod
     return d->show(flags, modality, parent);
 }
 
-void Qt5Gtk2FileDialogHelper::exec()
+void Qt6Gtk2FileDialogHelper::exec()
 {
     d->exec();
 }
 
-void Qt5Gtk2FileDialogHelper::hide()
+void Qt6Gtk2FileDialogHelper::hide()
 {
     // After GtkFileChooserDialog has been hidden, gtk_file_chooser_get_current_folder()
     // & gtk_file_chooser_get_filenames() will return bogus values -> cache the actual
@@ -283,18 +283,18 @@ void Qt5Gtk2FileDialogHelper::hide()
     d->hide();
 }
 
-bool Qt5Gtk2FileDialogHelper::defaultNameFilterDisables() const
+bool Qt6Gtk2FileDialogHelper::defaultNameFilterDisables() const
 {
     return false;
 }
 
-void Qt5Gtk2FileDialogHelper::setDirectory(const QUrl &directory)
+void Qt6Gtk2FileDialogHelper::setDirectory(const QUrl &directory)
 {
     GtkDialog *gtkDialog = d->gtkDialog();
     gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(gtkDialog), directory.toLocalFile().toUtf8().constData());
 }
 
-QUrl Qt5Gtk2FileDialogHelper::directory() const
+QUrl Qt6Gtk2FileDialogHelper::directory() const
 {
     // While GtkFileChooserDialog is hidden, gtk_file_chooser_get_current_folder()
     // returns a bogus value -> return the cached value before hiding
@@ -311,7 +311,7 @@ QUrl Qt5Gtk2FileDialogHelper::directory() const
     return QUrl::fromLocalFile(ret);
 }
 
-void Qt5Gtk2FileDialogHelper::selectFile(const QUrl &filename)
+void Qt6Gtk2FileDialogHelper::selectFile(const QUrl &filename)
 {
     GtkDialog *gtkDialog = d->gtkDialog();
     if (options()->acceptMode() == QFileDialogOptions::AcceptSave) {
@@ -323,7 +323,7 @@ void Qt5Gtk2FileDialogHelper::selectFile(const QUrl &filename)
     }
 }
 
-QList<QUrl> Qt5Gtk2FileDialogHelper::selectedFiles() const
+QList<QUrl> Qt6Gtk2FileDialogHelper::selectedFiles() const
 {
     // While GtkFileChooserDialog is hidden, gtk_file_chooser_get_filenames()
     // returns a bogus value -> return the cached value before hiding
@@ -339,12 +339,12 @@ QList<QUrl> Qt5Gtk2FileDialogHelper::selectedFiles() const
     return selection;
 }
 
-void Qt5Gtk2FileDialogHelper::setFilter()
+void Qt6Gtk2FileDialogHelper::setFilter()
 {
     applyOptions();
 }
 
-void Qt5Gtk2FileDialogHelper::selectNameFilter(const QString &filter)
+void Qt6Gtk2FileDialogHelper::selectNameFilter(const QString &filter)
 {
     GtkFileFilter *gtkFilter = _filters.value(filter);
     if (gtkFilter) {
@@ -353,14 +353,14 @@ void Qt5Gtk2FileDialogHelper::selectNameFilter(const QString &filter)
     }
 }
 
-QString Qt5Gtk2FileDialogHelper::selectedNameFilter() const
+QString Qt6Gtk2FileDialogHelper::selectedNameFilter() const
 {
     GtkDialog *gtkDialog = d->gtkDialog();
     GtkFileFilter *gtkFilter = gtk_file_chooser_get_filter(GTK_FILE_CHOOSER(gtkDialog));
     return _filterNames.value(gtkFilter);
 }
 
-void Qt5Gtk2FileDialogHelper::onAccepted()
+void Qt6Gtk2FileDialogHelper::onAccepted()
 {
     emit accept();
 
@@ -374,7 +374,7 @@ void Qt5Gtk2FileDialogHelper::onAccepted()
         emit fileSelected(files.first());
 }
 
-void Qt5Gtk2FileDialogHelper::onSelectionChanged(GtkDialog *gtkDialog, Qt5Gtk2FileDialogHelper *helper)
+void Qt6Gtk2FileDialogHelper::onSelectionChanged(GtkDialog *gtkDialog, Qt6Gtk2FileDialogHelper *helper)
 {
     QString selection;
     gchar *filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(gtkDialog));
@@ -385,12 +385,12 @@ void Qt5Gtk2FileDialogHelper::onSelectionChanged(GtkDialog *gtkDialog, Qt5Gtk2Fi
     emit helper->currentChanged(QUrl::fromLocalFile(selection));
 }
 
-void Qt5Gtk2FileDialogHelper::onCurrentFolderChanged(Qt5Gtk2FileDialogHelper *dialog)
+void Qt6Gtk2FileDialogHelper::onCurrentFolderChanged(Qt6Gtk2FileDialogHelper *dialog)
 {
     emit dialog->directoryEntered(dialog->directory());
 }
 
-void Qt5Gtk2FileDialogHelper::onUpdatePreview(GtkDialog *gtkDialog, Qt5Gtk2FileDialogHelper *helper)
+void Qt6Gtk2FileDialogHelper::onUpdatePreview(GtkDialog *gtkDialog, Qt6Gtk2FileDialogHelper *helper)
 {
     gchar *filename = gtk_file_chooser_get_preview_filename(GTK_FILE_CHOOSER(gtkDialog));
     if (!filename) {
@@ -437,7 +437,7 @@ static GtkFileChooserAction gtkFileChooserAction(const QSharedPointer<QFileDialo
     }
 }
 
-void Qt5Gtk2FileDialogHelper::applyOptions()
+void Qt6Gtk2FileDialogHelper::applyOptions()
 {
     GtkDialog *gtkDialog = d->gtkDialog();
     const QSharedPointer<QFileDialogOptions> &opts = options();
@@ -489,7 +489,7 @@ void Qt5Gtk2FileDialogHelper::applyOptions()
 #endif
 }
 
-void Qt5Gtk2FileDialogHelper::setNameFilters(const QStringList &filters)
+void Qt6Gtk2FileDialogHelper::setNameFilters(const QStringList &filters)
 {
     GtkDialog *gtkDialog = d->gtkDialog();
     for (GtkFileFilter *filter : qAsConst(_filters))
@@ -515,29 +515,29 @@ void Qt5Gtk2FileDialogHelper::setNameFilters(const QStringList &filters)
     }
 }
 
-Qt5Gtk2FontDialogHelper::Qt5Gtk2FontDialogHelper()
+Qt6Gtk2FontDialogHelper::Qt6Gtk2FontDialogHelper()
 {
     d.reset(new QGtk2Dialog(gtk_font_selection_dialog_new("")));
     connect(d.data(), SIGNAL(accept()), this, SLOT(onAccepted()));
     connect(d.data(), SIGNAL(reject()), this, SIGNAL(reject()));
 }
 
-Qt5Gtk2FontDialogHelper::~Qt5Gtk2FontDialogHelper()
+Qt6Gtk2FontDialogHelper::~Qt6Gtk2FontDialogHelper()
 {
 }
 
-bool Qt5Gtk2FontDialogHelper::show(Qt::WindowFlags flags, Qt::WindowModality modality, QWindow *parent)
+bool Qt6Gtk2FontDialogHelper::show(Qt::WindowFlags flags, Qt::WindowModality modality, QWindow *parent)
 {
     applyOptions();
     return d->show(flags, modality, parent);
 }
 
-void Qt5Gtk2FontDialogHelper::exec()
+void Qt6Gtk2FontDialogHelper::exec()
 {
     d->exec();
 }
 
-void Qt5Gtk2FontDialogHelper::hide()
+void Qt6Gtk2FontDialogHelper::hide()
 {
     d->hide();
 }
@@ -608,13 +608,13 @@ static QFont qt_fontFromString(const QString &name)
     return font;
 }
 
-void Qt5Gtk2FontDialogHelper::setCurrentFont(const QFont &font)
+void Qt6Gtk2FontDialogHelper::setCurrentFont(const QFont &font)
 {
     GtkFontSelectionDialog *gtkDialog = GTK_FONT_SELECTION_DIALOG(d->gtkDialog());
     gtk_font_selection_dialog_set_font_name(gtkDialog, qt_fontToString(font).toUtf8().constData());
 }
 
-QFont Qt5Gtk2FontDialogHelper::currentFont() const
+QFont Qt6Gtk2FontDialogHelper::currentFont() const
 {
     GtkFontSelectionDialog *gtkDialog = GTK_FONT_SELECTION_DIALOG(d->gtkDialog());
     gchar *name = gtk_font_selection_dialog_get_font_name(gtkDialog);
@@ -623,14 +623,14 @@ QFont Qt5Gtk2FontDialogHelper::currentFont() const
     return font;
 }
 
-void Qt5Gtk2FontDialogHelper::onAccepted()
+void Qt6Gtk2FontDialogHelper::onAccepted()
 {
     emit currentFontChanged(currentFont());
     emit accept();
     emit fontSelected(currentFont());
 }
 
-void Qt5Gtk2FontDialogHelper::applyOptions()
+void Qt6Gtk2FontDialogHelper::applyOptions()
 {
     GtkDialog *gtkDialog = d->gtkDialog();
     const QSharedPointer<QFontDialogOptions> &opts = options();

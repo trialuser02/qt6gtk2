@@ -62,13 +62,13 @@ private:
     QScopedPointer<QGtk2Dialog> d;
 };
 
-class Qt5Gtk2FileDialogHelper : public QPlatformFileDialogHelper
+class Qt6Gtk2FileDialogHelper : public QPlatformFileDialogHelper
 {
     Q_OBJECT
 
 public:
-    Qt5Gtk2FileDialogHelper();
-    ~Qt5Gtk2FileDialogHelper();
+    Qt6Gtk2FileDialogHelper();
+    ~Qt6Gtk2FileDialogHelper();
 
     bool show(Qt::WindowFlags flags, Qt::WindowModality modality, QWindow *parent) override;
     void exec() override;
@@ -87,9 +87,9 @@ private Q_SLOTS:
     void onAccepted();
 
 private:
-    static void onSelectionChanged(GtkDialog *dialog, Qt5Gtk2FileDialogHelper *helper);
-    static void onCurrentFolderChanged(Qt5Gtk2FileDialogHelper *helper);
-    static void onUpdatePreview(GtkDialog *dialog, Qt5Gtk2FileDialogHelper *helper);
+    static void onSelectionChanged(GtkDialog *dialog, Qt6Gtk2FileDialogHelper *helper);
+    static void onCurrentFolderChanged(Qt6Gtk2FileDialogHelper *helper);
+    static void onUpdatePreview(GtkDialog *dialog, Qt6Gtk2FileDialogHelper *helper);
     void applyOptions();
     void setNameFilters(const QStringList &filters);
 
@@ -101,13 +101,13 @@ private:
     GtkWidget *previewWidget;
 };
 
-class Qt5Gtk2FontDialogHelper : public QPlatformFontDialogHelper
+class Qt6Gtk2FontDialogHelper : public QPlatformFontDialogHelper
 {
     Q_OBJECT
 
 public:
-    Qt5Gtk2FontDialogHelper();
-    ~Qt5Gtk2FontDialogHelper();
+    Qt6Gtk2FontDialogHelper();
+    ~Qt6Gtk2FontDialogHelper();
 
     bool show(Qt::WindowFlags flags, Qt::WindowModality modality, QWindow *parent) override;
     void exec() override;
