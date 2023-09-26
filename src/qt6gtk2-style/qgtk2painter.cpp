@@ -56,11 +56,10 @@ QPixmap QGtk2Painter::renderTheme(uchar *bdata, uchar *wdata, const QRect &rect)
 
     if (m_hflipped || m_vflipped) {
         return QPixmap::fromImage(converted.mirrored(m_hflipped, m_vflipped));
-    } else {
-        // on raster graphicssystem we need to do a copy here, because
-        // we intend to deallocate the qimage bits shortly after...
-        return QPixmap::fromImage(converted.copy());
     }
+    // on raster graphicssystem we need to do a copy here, because
+    // we intend to deallocate the qimage bits shortly after...
+    return QPixmap::fromImage(converted.copy());
 }
 
 // This macro is responsible for painting any GtkStyle painting function onto a QPixmap

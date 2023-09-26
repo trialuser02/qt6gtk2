@@ -1020,11 +1020,11 @@ void QGtkStyle::drawPrimitive(PrimitiveElement element,
         QCommonStyle::drawPrimitive(element, option, painter, widget);
         if (!(option->state & State_Selected)) {
             break;
-        } else {
-            if (const QAbstractItemView *view = qobject_cast<const QAbstractItemView*>(widget)) {
-                if (!qobject_cast<QStyledItemDelegate*>(view->itemDelegate()))
-                    break;
-            }
+        }
+        if (const QAbstractItemView *view = qobject_cast<const QAbstractItemView*>(widget)) {
+            if (!qobject_cast<QStyledItemDelegate*>(view->itemDelegate()))
+                break;
+
         } // fall through
 
     case PE_PanelItemViewItem:
@@ -3587,7 +3587,7 @@ QRect QGtkStyle::subControlRect(ComplexControl control, const QStyleOptionComple
 
             if (subControl == SC_GroupBoxFrame)
                 return rect;
-            else if (subControl == SC_GroupBoxContents) {
+            if (subControl == SC_GroupBoxContents) {
                 int margin = 0;
                 int leftMarginExtension = 8;
                 return frameRect.adjusted(leftMarginExtension + margin, margin + topHeight + groupBoxTitleMargin, -margin, -margin);
