@@ -29,14 +29,28 @@
 
 QT_BEGIN_NAMESPACE
 
-static QString gtkSetting(const gchar *propertyName)
+static QVariant gtkSetting(const gchar *propertyName)
 {
     GtkSettings *settings = gtk_settings_get_default();
-    gchararray value;
-    g_object_get(settings, propertyName, &value, nullptr);
-    QString str = QString::fromUtf8(value);
-    g_free(value);
-    return str;
+    GValue value = G_VALUE_INIT;
+    QVariant ret;
+
+    g_object_get_property(G_OBJECT(settings), propertyName, &value);
+    if (G_VALUE_HOLDS_INT(&value)) {
+        ret = QVariant(g_value_get_int(&value));
+    } else if (G_VALUE_HOLDS_UINT(&value)) {
+        ret = QVariant(g_value_get_uint(&value));
+    } else if (G_VALUE_HOLDS_FLOAT(&value)) {
+        ret = QVariant(g_value_get_float(&value));
+    } else if (G_VALUE_HOLDS_STRING(&value)) {
+        ret = QVariant(QString::fromUtf8(g_value_get_string(&value)));
+    } else if (G_VALUE_HOLDS_BOOLEAN(&value)) {
+        ret = QVariant(g_value_get_boolean(&value));
+    } else {
+        ret = QVariant();
+    }
+    g_value_unset(&value);
+    return ret;
 }
 
 Qt6Gtk2Theme::Qt6Gtk2Theme()
@@ -53,10 +67,23 @@ Qt6Gtk2Theme::Qt6Gtk2Theme()
 QVariant Qt6Gtk2Theme::themeHint(QPlatformTheme::ThemeHint hint) const
 {
     switch (hint) {
+    case QPlatformTheme::CursorFlashTime:
+        // As close to GTK as possible.
+        if (gtkSetting("gtk-cursor-blink").toBool() && gtkSetting("gtk-cursor-blink-timeout").toInt() != 0) {
+            return gtkSetting("gtk-cursor-blink-time");
+        } else {
+            return QVariant((int) 0);
+        }
+    case QPlatformTheme::PasswordMaskDelay:
+        return gtkSetting("gtk-entry-password-hint-timeout");
+    case QPlatformTheme::DialogButtonBoxButtonsHaveIcons:
+        return gtkSetting("gtk-button-images");
+    case QPlatformTheme::ShowShortcutsInContextMenus:
+        return gtkSetting("gtk-enable-accels");
     case QPlatformTheme::SystemIconThemeName:
-        return QVariant(gtkSetting("gtk-icon-theme-name"));
+        return gtkSetting("gtk-icon-theme-name");
     case QPlatformTheme::SystemIconFallbackThemeName:
-        return QVariant(gtkSetting("gtk-fallback-icon-theme"));
+        return gtkSetting("gtk-fallback-icon-theme");
     case QPlatformTheme::StyleNames:
     {
         QStringList styleNames;
@@ -64,8 +91,6 @@ QVariant Qt6Gtk2Theme::themeHint(QPlatformTheme::ThemeHint hint) const
         //styleNames << QGnomeTheme::themeHint(hint).toStringList();
         return styleNames;
     }
-    case QPlatformTheme::ShowShortcutsInContextMenus:
-        return true;
     default:
         return QGnomeTheme::themeHint(hint);
     }
@@ -73,7 +98,7 @@ QVariant Qt6Gtk2Theme::themeHint(QPlatformTheme::ThemeHint hint) const
 
 QString Qt6Gtk2Theme::gtkFontName() const
 {
-    QString cfgFontName = gtkSetting("gtk-font-name");
+    QString cfgFontName = gtkSetting("gtk-font-name").toString();
     if (!cfgFontName.isEmpty())
         return cfgFontName;
     return QGnomeTheme::gtkFontName();
