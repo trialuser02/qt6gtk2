@@ -674,12 +674,20 @@ int QGtkStyle::pixelMetric(PixelMetric metric,
     case PM_ToolBarItemMargin:
         return 1;
     case PM_SmallIconSize:
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 7, 0))
+        return 22;
+#else
         return 16;
+#endif
     case PM_MaximumDragDistance:
         return -1;
     case PM_TabCloseIndicatorWidth:
     case PM_TabCloseIndicatorHeight:
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 7, 0))
+        return 16;
+#else
         return 20;
+#endif
     default:
         return QCommonStyle::pixelMetric(metric, option, widget);
     }
