@@ -560,7 +560,7 @@ int QGtkStyle::pixelMetric(PixelMetric metric,
         QStringList values = QString(QLS(icon_sizes)).split(QLatin1Char(':'));
         g_free(icon_sizes);
         QChar splitChar(QLatin1Char(','));
-        for (const QString &value : qAsConst(values)) {
+        for (const QString &value : std::as_const(values)) {
             if (value.startsWith(QLS("gtk-button="))) {
                 QString iconSize = value.right(value.size() - 11);
 
@@ -661,8 +661,6 @@ int QGtkStyle::pixelMetric(PixelMetric metric,
         return 0;
     case PM_ListViewIconSize:
         return 24;
-    case PM_DialogButtonsSeparator:
-        return 6;
     case PM_TitleBarHeight:
         return 24;
     case PM_SpinBoxFrameWidth:
@@ -1691,7 +1689,6 @@ void QGtkStyle::drawComplexControl(ComplexControl control, const QStyleOptionCom
                     bool sunken = (titleBar->activeSubControls & SC_TitleBarContextHelpButton) && (titleBar->state & State_Sunken);
                     qt_gtk_draw_mdibutton(painter, titleBar, contextHelpButtonRect, hover, sunken);
 
-                    QColor blend;
                     QImage image(qt_titlebar_context_help);
                     QColor alpha = textColor;
                     alpha.setAlpha(128);

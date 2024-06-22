@@ -492,20 +492,20 @@ void Qt6Gtk2FileDialogHelper::applyOptions()
 void Qt6Gtk2FileDialogHelper::setNameFilters(const QStringList &filters)
 {
     GtkDialog *gtkDialog = d->gtkDialog();
-    for (GtkFileFilter *filter : qAsConst(_filters))
+    for (GtkFileFilter *filter : std::as_const(_filters))
         gtk_file_chooser_remove_filter(GTK_FILE_CHOOSER(gtkDialog), filter);
 
     _filters.clear();
     _filterNames.clear();
 
-    for (const QString &filter : qAsConst(filters)) {
+    for (const QString &filter : std::as_const(filters)) {
         GtkFileFilter *gtkFilter = gtk_file_filter_new();
         const QString name = filter.left(filter.indexOf(QLatin1Char('(')));
         const QStringList extensions = cleanFilterList(filter);
 
         gtk_file_filter_set_name(gtkFilter, name.isEmpty() ? extensions.join(QStringLiteral(", ")).toUtf8().constData() :
                                                              name.toUtf8().constData());
-        for (const QString &ext : qAsConst(extensions))
+        for (const QString &ext : std::as_const(extensions))
             gtk_file_filter_add_pattern(gtkFilter, ext.toUtf8().constData());
 
         gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(gtkDialog), gtkFilter);

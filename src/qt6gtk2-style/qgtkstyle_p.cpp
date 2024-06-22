@@ -506,7 +506,7 @@ void QGtkStyleUpdateScheduler::updateTheme()
           }
           QList<QWidget*> widgets = QApplication::allWidgets();
           // Notify all widgets that size metrics might have changed
-          for (QWidget *widget : qAsConst(widgets)) {
+          for (QWidget *widget : std::as_const(widgets)) {
               QEvent e(QEvent::StyleChange);
               QApplication::sendEvent(widget, &e);
           }
