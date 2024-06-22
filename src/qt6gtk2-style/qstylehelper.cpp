@@ -35,7 +35,11 @@ QT_BEGIN_NAMESPACE
 
 namespace QStyleHelper {
 
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 8, 0))
+QString uniqueName(const QString &key, const QStyleOption *option, const QSize &size, int dpr)
+#else
 QString uniqueName(const QString &key, const QStyleOption *option, const QSize &size)
+#endif
 {
     const QStyleOptionComplex *complexOption = qstyleoption_cast<const QStyleOptionComplex *>(option);
     QString tmp = key % HexString<uint>(option->state)
@@ -43,13 +47,17 @@ QString uniqueName(const QString &key, const QStyleOption *option, const QSize &
                       % HexString<uint>(complexOption ? uint(complexOption->activeSubControls) : 0u)
                       % HexString<quint64>(option->palette.cacheKey())
                       % HexString<uint>(size.width())
-                      % HexString<uint>(size.height());
+                      % HexString<uint>(size.height())
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 8, 0))
+                      % HexString<int>(dpr)
+#endif
+            ;
 
 #ifndef QT_NO_SPINBOX
     if (const QStyleOptionSpinBox *spinBox = qstyleoption_cast<const QStyleOptionSpinBox *>(option)) {
         tmp = tmp % HexString<uint>(spinBox->buttonSymbols)
                   % HexString<uint>(spinBox->stepEnabled)
-                  % QLatin1Char(spinBox->frame ? '1' : '0'); ;
+                  % QLatin1Char(spinBox->frame ? '1' : '0');
     }
 #endif // QT_NO_SPINBOX
     return tmp;

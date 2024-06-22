@@ -639,7 +639,7 @@ int QGtkStyle::pixelMetric(PixelMetric metric,
 
     case PM_MenuBarVMargin: {
         GtkWidget *gtkMenubar = d->gtkWidget("GtkMenuBar");
-        return  qMax(0, gtk_widget_get_style(gtkMenubar)->ythickness);
+        return qMax(0, gtk_widget_get_style(gtkMenubar)->ythickness);
     }
     case PM_ScrollView_ScrollBarSpacing:
     {

@@ -51,7 +51,11 @@ class QWindow;
 
 namespace QStyleHelper
 {
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 8, 0))
+    QString uniqueName(const QString &key, const QStyleOption *option, const QSize &size, int dpr);
+#else
     QString uniqueName(const QString &key, const QStyleOption *option, const QSize &size);
+#endif
 #ifndef QT_NO_DIAL
     qreal angle(const QPointF &p1, const QPointF &p2);
     QPolygonF calcLines(const QStyleOptionSlider *dial);
