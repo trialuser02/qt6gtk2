@@ -8,3 +8,8 @@ Version 0.2
 * Added Qt version checking
 * Added preview support to the file dialog (Ilya Fedin)
 * Added "gtk2" platform theme key (lvlgl)
+
+Version 0.3
+* Fixed dock widget buttons size for Qt 6.7 or higher
+* Fixed build with Qt 6.8
+* Improved GTK settings support (patch by Alexei Sorokin)
