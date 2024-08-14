@@ -3241,7 +3241,7 @@ void QGtkStyle::drawControl(ControlElement element,
             int tab = menuitem->reservedShortcutWidth;
             int xm = QGtkStylePrivate::menuItemFrame + checkcol + windowsItemHMargin;
             int xpos = menuitem->rect.x() + xm + 1;
-            QRect textRect(xpos, y + windowsItemVMargin, w - xm - QGtkStylePrivate::menuRightBorder - tab + 1, h - 2 * windowsItemVMargin);
+            QRect textRect(xpos, y - windowsItemVMargin + h, w - xm - QGtkStylePrivate::menuRightBorder - tab + 1, 2 * windowsItemVMargin - h);
             QRect vTextRect = visualRect(opt->direction, menuitem->rect, textRect);
             QString s = menuitem->text;
 
