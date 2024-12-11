@@ -26,7 +26,7 @@ QT_BEGIN_NAMESPACE
 class Qt6Gtk2ThemePlugin : public QPlatformThemePlugin
 {
    Q_OBJECT
-   Q_PLUGIN_METADATA(IID QPlatformThemeFactoryInterface_iid FILE "qt6gtk2.json")
+   Q_PLUGIN_METADATA(IID "QPlatformThemeFactoryInterface_iid" FILE "qt6gtk2.json")
 
 public:
     QPlatformTheme *create(const QString &key, const QStringList &params) override;
